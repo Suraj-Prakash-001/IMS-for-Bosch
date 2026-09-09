@@ -1,0 +1,15 @@
+{
+  "version": 2,
+  "dgSpecHash": "pot9vovlaVk=",
+  "success": false,
+  "projectFilePath": "C:\\Users\\PSK6COB\\Documents\\GitHub\\IMS-for-Bosch\\backend\\InventoryManagement.Api\\InventoryManagement.Api.csproj",
+  "expectedPackageFiles": [],
+  "logs": [
+    {
+      "code": "NU1301",
+      "level": "Error",
+      "message": "Unable to load the service index for source https://api.nuget.org/v3/index.json.",
+      "libraryId": "Microsoft.AspNetCore.OpenApi"
+    }
+  ]
+}
