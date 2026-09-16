@@ -1,3 +1,11 @@
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.csproj.AssemblyReference.cache
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.AssemblyInfoInputs.cache
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.AssemblyInfo.cs
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.csproj.CoreCompileInputs.cache
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.sourcelink.json
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\bin\Debug\net8.0\appsettings.Development.json
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\bin\Debug\net8.0\appsettings.json
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\bin\Debug\net8.0\InventoryManagement.Api.exe
@@ -24,14 +32,6 @@ C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\bin\Debug\net8.0\System.IdentityModel.Tokens.Jwt.dll
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\bin\Debug\net8.0\ZstdSharp.dll
-C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.csproj.AssemblyReference.cache
-C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.GeneratedMSBuildEditorConfig.editorconfig
-C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.AssemblyInfoInputs.cache
-C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.AssemblyInfo.cs
-C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.csproj.CoreCompileInputs.cache
-C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.MvcApplicationPartsAssemblyInfo.cs
-C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.MvcApplicationPartsAssemblyInfo.cache
-C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.sourcelink.json
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\staticwebassets\msbuild.InventoryManagement.Api.Microsoft.AspNetCore.StaticWebAssets.props

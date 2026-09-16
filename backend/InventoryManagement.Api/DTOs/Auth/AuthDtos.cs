@@ -4,6 +4,14 @@ public record RegisterRequest(
     string Username,
     string Email,
     string Name,
+    string Password,
+    string DepartmentId);
+
+public record ManagerRegisterRequest(
+    string Token,
+    string Username,
+    string Email,
+    string Name,
     string Password);
 
 public record LoginRequest(
@@ -15,4 +23,5 @@ public record AuthResponse(
     string UserId,
     string Username,
     string Name,
-    string Role);
+    string Role,
+    string DepartmentId = "");

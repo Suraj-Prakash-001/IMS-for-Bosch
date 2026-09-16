@@ -54,6 +54,15 @@ public class TokenService
                 user.Role.ToString())
         };
 
+        // Add DepartmentId when the account has one.
+        if (!string.IsNullOrWhiteSpace(user.DepartmentId))
+        {
+            claims.Add(
+                new Claim(
+                    "DepartmentId",
+                    user.DepartmentId));
+        }
+
         var securityKey =
             new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(key));

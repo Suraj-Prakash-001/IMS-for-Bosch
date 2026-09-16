@@ -42,4 +42,7 @@ public class MongoDbContext
 
     public IMongoCollection<Order> Orders =>
         _database.GetCollection<Order>("orders");
+    
+    public IMongoCollection<ManagerInvitation> ManagerInvitations =>
+    _database.GetCollection<ManagerInvitation>("managerInvitations");
 }

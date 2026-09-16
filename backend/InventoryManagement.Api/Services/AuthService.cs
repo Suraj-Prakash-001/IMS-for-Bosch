@@ -11,16 +11,129 @@ public class AuthService
     private readonly MongoDbContext _db;
     private readonly PasswordHasher _passwordHasher;
     private readonly TokenService _tokenService;
+    private readonly ManagerInvitationService _managerInvitationService;
 
-    public AuthService(
-        MongoDbContext db,
-        PasswordHasher passwordHasher,
-        TokenService tokenService)
+   public AuthService(
+    MongoDbContext db,
+    PasswordHasher passwordHasher,
+    TokenService tokenService,
+    ManagerInvitationService managerInvitationService)
+{
+    _db = db;
+    _passwordHasher = passwordHasher;
+    _tokenService = tokenService;
+    _managerInvitationService = managerInvitationService;
+}
+
+    public async Task<AuthResponse> RegisterManagerAsync(
+    ManagerRegisterRequest request)
+{
+    if (string.IsNullOrWhiteSpace(request.Token))
     {
-        _db = db;
-        _passwordHasher = passwordHasher;
-        _tokenService = tokenService;
+        throw new ArgumentException(
+            "Invitation token is required.");
     }
+
+    if (string.IsNullOrWhiteSpace(request.Username))
+    {
+        throw new ArgumentException(
+            "Username is required.");
+    }
+
+    if (string.IsNullOrWhiteSpace(request.Email))
+    {
+        throw new ArgumentException(
+            "Email is required.");
+    }
+
+    if (string.IsNullOrWhiteSpace(request.Name))
+    {
+        throw new ArgumentException(
+            "Name is required.");
+    }
+
+    if (string.IsNullOrWhiteSpace(request.Password))
+    {
+        throw new ArgumentException(
+            "Password is required.");
+    }
+
+    var invitation =
+        await _managerInvitationService
+            .GetValidInvitationAsync(request.Token);
+
+    if (invitation == null)
+    {
+        throw new InvalidOperationException(
+            "This invitation is invalid, expired, or already used.");
+    }
+
+    string username = request.Username.Trim();
+    string email = request.Email.Trim();
+    string name = request.Name.Trim();
+
+    bool usernameExists = await _db.Users
+        .Find(x => x.Username == username)
+        .AnyAsync();
+
+    if (usernameExists)
+    {
+        throw new InvalidOperationException(
+            "Username is already registered.");
+    }
+
+    bool emailExists = await _db.Users
+        .Find(x => x.Email == email)
+        .AnyAsync();
+
+    if (emailExists)
+    {
+        throw new InvalidOperationException(
+            "Email is already registered.");
+    }
+
+    var (passwordHash, passwordSalt) =
+        _passwordHasher.HashPassword(request.Password);
+
+    var manager = new User
+    {
+        Username = username,
+        Email = email,
+        Name = name,
+        PasswordHash = passwordHash,
+        PasswordSalt = passwordSalt,
+        Role = UserRole.Manager,
+        DepartmentId = invitation.DepartmentId,
+        IsActive = true,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    await _db.Users.InsertOneAsync(manager);
+
+    bool invitationUsed =
+        await _managerInvitationService
+            .MarkAsUsedAsync(request.Token);
+
+    if (!invitationUsed)
+    {
+        await _db.Users.DeleteOneAsync(
+            x => x.Id == manager.Id);
+
+        throw new InvalidOperationException(
+            "This invitation has already been used.");
+    }
+
+    string jwt =
+        _tokenService.CreateToken(manager);
+
+    return new AuthResponse(
+        jwt,
+        manager.Id,
+        manager.Username,
+        manager.Name,
+        manager.Role.ToString(),
+        manager.DepartmentId);
+}
 
     public async Task<AuthResponse> RegisterCustomerAsync(
         RegisterRequest request)
@@ -53,6 +166,11 @@ public class AuthService
             throw new InvalidOperationException(
                 "Email already exists.");
         }
+        if (string.IsNullOrWhiteSpace(request.DepartmentId))
+{
+    throw new ArgumentException(
+        "Department ID is required.");
+}
 
         var (hash, salt) =
             _passwordHasher.HashPassword(
@@ -67,7 +185,8 @@ public class AuthService
             PasswordSalt = salt,
             Role = UserRole.Customer,
             IsActive = true,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.UtcNow,
+            DepartmentId = request.DepartmentId.Trim(),
         };
 
         await _db.Users.InsertOneAsync(user);
@@ -76,11 +195,12 @@ public class AuthService
             _tokenService.CreateToken(user);
 
         return new AuthResponse(
-            token,
-            user.Id,
-            user.Username,
-            user.Name,
-            user.Role.ToString());
+    token,
+    user.Id,
+    user.Username,
+    user.Name,
+    user.Role.ToString(),
+    user.DepartmentId);
     }
 
     public async Task<AuthResponse?> LoginAsync(
@@ -121,11 +241,12 @@ public class AuthService
             _tokenService.CreateToken(user);
 
         return new AuthResponse(
-            token,
-            user.Id,
-            user.Username,
-            user.Name,
-            user.Role.ToString());
+    token,
+    user.Id,
+    user.Username,
+    user.Name,
+    user.Role.ToString(),
+    user.DepartmentId);
     }
 
     private static void ValidateRegistrationRequest(

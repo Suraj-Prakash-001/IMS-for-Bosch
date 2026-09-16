@@ -1,5 +1,6 @@
 using InventoryManagement.Api.DTOs.Auth;
 using InventoryManagement.Api.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace InventoryManagement.Api.Controllers;
@@ -39,6 +40,34 @@ public class AuthController : ControllerBase
             });
         }
     }
+
+    [HttpPost("register-manager")]
+[AllowAnonymous]
+public async Task<IActionResult> RegisterManager(
+    ManagerRegisterRequest request)
+{
+    try
+    {
+        var response =
+            await _authService.RegisterManagerAsync(request);
+
+        return Ok(response);
+    }
+    catch (ArgumentException ex)
+    {
+        return BadRequest(new
+        {
+            message = ex.Message
+        });
+    }
+    catch (InvalidOperationException ex)
+    {
+        return Conflict(new
+        {
+            message = ex.Message
+        });
+    }
+}
 
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginRequest request)

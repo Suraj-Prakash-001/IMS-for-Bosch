@@ -10,28 +10,22 @@ public class User
     [BsonRepresentation(BsonType.ObjectId)]
     public string Id { get; set; } = string.Empty;
 
-    [BsonElement("username")]
     public string Username { get; set; } = string.Empty;
 
-    [BsonElement("email")]
     public string Email { get; set; } = string.Empty;
 
-    [BsonElement("name")]
     public string Name { get; set; } = string.Empty;
 
-    [BsonElement("passwordHash")]
     public string PasswordHash { get; set; } = string.Empty;
 
-    [BsonElement("passwordSalt")]
     public string PasswordSalt { get; set; } = string.Empty;
 
-    [BsonElement("role")]
     [BsonRepresentation(BsonType.String)]
-    public UserRole Role { get; set; }
+    public UserRole Role { get; set; } = UserRole.Customer;
 
-    [BsonElement("isActive")]
+    public string DepartmentId { get; set; } = string.Empty;
+
     public bool IsActive { get; set; } = true;
 
-    [BsonElement("createdAt")]
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 }

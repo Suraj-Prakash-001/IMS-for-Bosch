@@ -41,6 +41,7 @@ export function registerUser({
   email,
   name,
   password,
+  departmentId,
 }) {
   return request("/Auth/register", {
     method: "POST",
@@ -49,6 +50,7 @@ export function registerUser({
       email,
       name,
       password,
+      departmentId,
     }),
   });
 }

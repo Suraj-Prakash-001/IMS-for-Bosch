@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-import { registerUser } from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import { registerUser } from "../services/api";
 
 function Register() {
   const navigate = useNavigate();
@@ -12,6 +11,7 @@ function Register() {
     name: "",
     username: "",
     email: "",
+    departmentId: "",
     password: "",
     confirmPassword: "",
   });
@@ -20,10 +20,12 @@ function Register() {
   const [loading, setLoading] = useState(false);
 
   const handleChange = (event) => {
-    setForm({
-      ...form,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value } = event.target;
+
+    setForm((current) => ({
+      ...current,
+      [name]: value,
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -31,31 +33,39 @@ function Register() {
 
     setError("");
 
+    if (
+      !form.name ||
+      !form.username ||
+      !form.email ||
+      !form.departmentId ||
+      !form.password ||
+      !form.confirmPassword
+    ) {
+      setError("Please fill in all fields.");
+      return;
+    }
+
     if (form.password !== form.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
 
-    if (form.password.length < 8) {
-      setError("Password must contain at least 8 characters.");
-      return;
-    }
-
-    setLoading(true);
-
     try {
+      setLoading(true);
+
       const response = await registerUser({
         name: form.name,
         username: form.username,
         email: form.email,
+        departmentId: form.departmentId,
         password: form.password,
       });
 
       login(response);
 
-      navigate("/home", { replace: true });
+      navigate("/home");
     } catch (err) {
-      setError(err.message || "Unable to create account.");
+      setError(err.message || "Registration failed.");
     } finally {
       setLoading(false);
     }
@@ -63,50 +73,41 @@ function Register() {
 
   return (
     <div className="auth-page">
-      <div className="auth-brand">
-        <img
-          src="/bosch-emblem.png"
-          alt="Bosch emblem"
-        />
-        <span>BOSCH</span>
-      </div>
-
-      <div className="auth-card auth-card-wide">
-        <div className="auth-heading">
-          <p className="landing-eyebrow">GET STARTED</p>
-          <h1>Create account</h1>
+      <div className="auth-card">
+        <div className="auth-header">
+          <p className="eyebrow">INVENTORY MANAGEMENT</p>
+          <h1>Create Account</h1>
           <p>
-            Create a customer account to browse inventory and
-            place orders.
+            Register to browse inventory and place requests.
           </p>
         </div>
 
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
+        <form onSubmit={handleSubmit} className="auth-form">
+          {error && (
+            <div className="form-error">
+              {error}
+            </div>
+          )}
 
-        <form onSubmit={handleSubmit}>
           <label>
-            Full name
+            Full Name
             <input
+              type="text"
               name="name"
               value={form.name}
               onChange={handleChange}
-              placeholder="Your name"
-              required
+              placeholder="Enter your full name"
             />
           </label>
 
           <label>
             Username
             <input
+              type="text"
               name="username"
               value={form.username}
               onChange={handleChange}
               placeholder="Choose a username"
-              required
             />
           </label>
 
@@ -117,8 +118,18 @@ function Register() {
               name="email"
               value={form.email}
               onChange={handleChange}
-              placeholder="you@example.com"
-              required
+              placeholder="Enter your email"
+            />
+          </label>
+
+          <label>
+            Department ID
+            <input
+              type="text"
+              name="departmentId"
+              value={form.departmentId}
+              onChange={handleChange}
+              placeholder="e.g. IT-001"
             />
           </label>
 
@@ -129,20 +140,18 @@ function Register() {
               name="password"
               value={form.password}
               onChange={handleChange}
-              placeholder="At least 8 characters"
-              required
+              placeholder="Create a password"
             />
           </label>
 
           <label>
-            Confirm password
+            Confirm Password
             <input
               type="password"
               name="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
-              placeholder="Repeat your password"
-              required
+              placeholder="Confirm your password"
             />
           </label>
 
@@ -151,18 +160,14 @@ function Register() {
             className="auth-submit"
             disabled={loading}
           >
-            {loading ? "Creating account..." : "Create account"}
+            {loading ? "Creating Account..." : "Register"}
           </button>
         </form>
 
-        <p className="auth-footer-text">
+        <div className="auth-footer">
           Already have an account?{" "}
-          <Link to="/login">Sign in</Link>
-        </p>
-
-        <Link to="/" className="auth-back">
-          ← Back to home
-        </Link>
+          <Link to="/login">Login</Link>
+        </div>
       </div>
     </div>
   );
