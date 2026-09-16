@@ -26,16 +26,40 @@ function AdminLayout({ children }) {
   );
 }
 
+function SimpleAdminPage({ title, description }) {
+  return (
+    <AdminLayout>
+      <div className="page">
+        <div className="page-heading">
+          <p className="eyebrow">ADMINISTRATION</p>
+          <h2>{title}</h2>
+          <p>{description}</p>
+        </div>
+      </div>
+    </AdminLayout>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Public */}
+
+        {/* =========================
+            PUBLIC
+        ========================== */}
+
         <Route path="/" element={<Landing />} />
+
         <Route path="/login" element={<Login />} />
+
         <Route path="/register" element={<Register />} />
 
-        {/* Customer */}
+
+        {/* =========================
+            CUSTOMER
+        ========================== */}
+
         <Route
           path="/home"
           element={
@@ -69,7 +93,12 @@ function App() {
           }
         />
 
-        {/* Admin */}
+
+        {/* =========================
+            ADMIN
+        ========================== */}
+
+        {/* Login currently sends Admin here */}
         <Route
           path="/admin"
           element={
@@ -78,6 +107,21 @@ function App() {
             </AdminLayout>
           }
         />
+
+        {/* Sidebar Dashboard */}
+        <Route
+          path="/dashboard"
+          element={
+            <AdminLayout>
+              <Dashboard />
+            </AdminLayout>
+          }
+        />
+
+
+        {/* =========================
+            CAMPUSES
+        ========================== */}
 
         <Route
           path="/admin/campuses"
@@ -89,6 +133,20 @@ function App() {
         />
 
         <Route
+          path="/campuses"
+          element={
+            <AdminLayout>
+              <Campuses />
+            </AdminLayout>
+          }
+        />
+
+
+        {/* =========================
+            BUILDINGS
+        ========================== */}
+
+        <Route
           path="/admin/campuses/:campusId"
           element={
             <AdminLayout>
@@ -98,6 +156,16 @@ function App() {
         />
 
         <Route
+          path="/campuses/:campusId"
+          element={
+            <AdminLayout>
+              <Buildings />
+            </AdminLayout>
+          }
+        />
+
+        {/* Existing Buildings page links to /buildings/:buildingId */}
+        <Route
           path="/admin/buildings/:buildingId"
           element={
             <AdminLayout>
@@ -105,6 +173,65 @@ function App() {
             </AdminLayout>
           }
         />
+
+        <Route
+          path="/buildings/:buildingId"
+          element={
+            <AdminLayout>
+              <Floors />
+            </AdminLayout>
+          }
+        />
+
+
+        {/* =========================
+            SIDEBAR MANAGEMENT
+        ========================== */}
+
+        <Route
+          path="/inventory"
+          element={
+            <SimpleAdminPage
+              title="Inventory"
+              description="Inventory management will be available here."
+            />
+          }
+        />
+
+        <Route
+          path="/movements"
+          element={
+            <SimpleAdminPage
+              title="Movements"
+              description="Asset movement tracking will be available here."
+            />
+          }
+        />
+
+        <Route
+          path="/buildings"
+          element={
+            <SimpleAdminPage
+              title="Buildings"
+              description="Select a campus from Campuses to view its buildings."
+            />
+          }
+        />
+
+        <Route
+          path="/floors"
+          element={
+            <SimpleAdminPage
+              title="Floors"
+              description="Select a building from a campus to view its floors."
+            />
+          }
+        />
+
+
+        {/* =========================
+            FLOOR MAP
+        ========================== */}
 
         <Route
           path="/admin/floors/:floorId"
@@ -123,11 +250,16 @@ function App() {
           }
         />
 
-        {/* Fallback */}
+
+        {/* =========================
+            FALLBACK
+        ========================== */}
+
         <Route
           path="*"
           element={<Navigate to="/" replace />}
         />
+
       </Routes>
     </BrowserRouter>
   );
