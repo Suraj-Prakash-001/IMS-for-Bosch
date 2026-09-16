@@ -80,12 +80,12 @@ function Orders() {
   }
 
   const statusNames = {
-    0: "Pending Manager Approval",
-    1: "Pending Admin Processing",
-    2: "Rejected By Manager",
-    3: "In Progress",
-    4: "Completed",
-  };
+  0: "Pending Manager Approval",
+  1: "Pending Admin Processing",
+  2: "Rejected By Manager",
+  3: "In Progress",
+  4: "Completed",
+};
 
   if (typeof status === "number") {
     return statusNames[status] || `Status ${status}`;
