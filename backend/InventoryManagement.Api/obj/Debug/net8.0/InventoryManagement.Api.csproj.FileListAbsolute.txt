@@ -46,3 +46,4 @@ C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.pdb
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\InventoryManagement.Api.genruntimeconfig.cache
 C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\obj\Debug\net8.0\ref\InventoryManagement.Api.dll
+C:\Users\PSK6COB\Documents\GitHub\IMS-for-Bosch\backend\InventoryManagement.Api\bin\Debug\net8.0\InventoryManagement.Api.staticwebassets.runtime.json

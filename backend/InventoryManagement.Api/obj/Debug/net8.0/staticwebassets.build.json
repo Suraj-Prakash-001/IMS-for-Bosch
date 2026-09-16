@@ -1,11 +1,39 @@
 {
   "Version": 1,
-  "Hash": "9AlvK0CBkLhJW0AdSE3R0G3lifnSylFX/qCUVAT6CtA=",
+  "Hash": "7eZ+6AjfN5qzzBDLlfNz1V3tlXEOFGrysWHJecgQvnU=",
   "Source": "InventoryManagement.Api",
   "BasePath": "_content/InventoryManagement.Api",
   "Mode": "Default",
   "ManifestType": "Build",
   "ReferencedProjectsConfiguration": [],
-  "DiscoveryPatterns": [],
-  "Assets": []
+  "DiscoveryPatterns": [
+    {
+      "Name": "InventoryManagement.Api\\wwwroot",
+      "Source": "InventoryManagement.Api",
+      "ContentRoot": "C:\\Users\\PSK6COB\\Documents\\GitHub\\IMS-for-Bosch\\backend\\InventoryManagement.Api\\wwwroot\\",
+      "BasePath": "_content/InventoryManagement.Api",
+      "Pattern": "**"
+    }
+  ],
+  "Assets": [
+    {
+      "Identity": "C:\\Users\\PSK6COB\\Documents\\GitHub\\IMS-for-Bosch\\backend\\InventoryManagement.Api\\wwwroot\\uploads\\products\\ebd4da0db64749038ceba07532e6fb52.jpg",
+      "SourceId": "InventoryManagement.Api",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PSK6COB\\Documents\\GitHub\\IMS-for-Bosch\\backend\\InventoryManagement.Api\\wwwroot\\",
+      "BasePath": "_content/InventoryManagement.Api",
+      "RelativePath": "uploads/products/ebd4da0db64749038ceba07532e6fb52.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\uploads\\products\\ebd4da0db64749038ceba07532e6fb52.jpg"
+    }
+  ]
 }

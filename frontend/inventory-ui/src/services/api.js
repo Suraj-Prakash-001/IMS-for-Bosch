@@ -26,6 +26,10 @@ async function request(endpoint, options = {}) {
   return data;
 }
 
+// ===============================
+// AUTH
+// ===============================
+
 export function loginUser(username, password) {
   return request("/Auth/login", {
     method: "POST",
@@ -51,6 +55,85 @@ export function registerUser({
       name,
       password,
       departmentId,
+    }),
+  });
+}
+
+// ===============================
+// PRODUCTS
+// ===============================
+
+export function getProducts(categoryId = null) {
+  const query = categoryId
+    ? `?categoryId=${encodeURIComponent(categoryId)}`
+    : "";
+
+  return request(`/products${query}`, {
+    method: "GET",
+  });
+}
+
+export function getProduct(productId) {
+  return request(`/products/${productId}`, {
+    method: "GET",
+  });
+}
+
+// ===============================
+// ORDERS
+// ===============================
+
+export function createOrder(items, token) {
+  return request("/orders", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      items,
+    }),
+  });
+}
+
+export function getMyOrders(token) {
+  return request("/orders/mine", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// ===============================
+// MANAGER APPROVALS
+// ===============================
+
+export function getManagerPendingOrders(token) {
+  return request("/orders/manager/pending", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function approveManagerOrder(orderId, token) {
+  return request(`/orders/manager/${orderId}/approve`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function rejectManagerOrder(orderId, comment, token) {
+  return request(`/orders/manager/${orderId}/reject`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      comment,
     }),
   });
 }

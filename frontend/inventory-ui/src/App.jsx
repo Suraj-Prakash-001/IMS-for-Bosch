@@ -4,7 +4,7 @@ import {
   Route,
   Routes,
 } from "react-router-dom";
-
+import Products from "./pages/Products";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 
@@ -70,16 +70,13 @@ function App() {
         />
 
         <Route
-          path="/products"
-          element={
-            <ProtectedRoute role="Customer">
-              <div className="simple-page">
-                <h1>Products</h1>
-                <p>Product catalogue coming next.</p>
-              </div>
-            </ProtectedRoute>
-          }
-        />
+  path="/products"
+  element={
+    <ProtectedRoute role="Customer">
+      <Products />
+    </ProtectedRoute>
+  }
+/>
 
         <Route
           path="/orders"
