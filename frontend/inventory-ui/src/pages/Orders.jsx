@@ -75,14 +75,26 @@ function Orders() {
   };
 
   const formatStatus = (status) => {
-    if (!status) {
-      return "Unknown";
-    }
+  if (status === null || status === undefined) {
+    return "Unknown";
+  }
 
-    return status
-      .replace(/([a-z])([A-Z])/g, "$1 $2")
-      .replace(/_/g, " ");
+  const statusNames = {
+    0: "Pending Manager Approval",
+    1: "Pending Admin Processing",
+    2: "Rejected By Manager",
+    3: "In Progress",
+    4: "Completed",
   };
+
+  if (typeof status === "number") {
+    return statusNames[status] || `Status ${status}`;
+  }
+
+  return String(status)
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .replace(/_/g, " ");
+};
 
   const formatDate = (date) => {
     if (!date) {

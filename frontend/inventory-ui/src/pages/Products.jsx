@@ -1,17 +1,36 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Search, ShoppingBag, Package } from "lucide-react";
+import {
+  Search,
+  ShoppingBag,
+  Package,
+  X,
+  Minus,
+  Plus,
+  CheckCircle2,
+} from "lucide-react";
 
-import { getProducts } from "../services/api";
+import { getProducts, createOrder } from "../services/api";
 import { useAuth } from "../context/AuthContext";
+import Header from "../components/Header";
 
 function Products() {
-  const { name, username, logout } = useAuth();
+  const { name, username, token } = useAuth();
 
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+
+  const [selectedProduct, setSelectedProduct] =
+    useState(null);
+
+  const [quantity, setQuantity] = useState(1);
+  const [ordering, setOrdering] = useState(false);
+  const [orderError, setOrderError] = useState("");
+  const [orderSuccess, setOrderSuccess] = useState(false);
+
+  const displayName = name || username || "Customer";
 
   useEffect(() => {
     async function loadProducts() {
@@ -40,66 +59,99 @@ function Products() {
     return (
       product.name?.toLowerCase().includes(search) ||
       product.sku?.toLowerCase().includes(search) ||
-      product.description?.toLowerCase().includes(search)
+      product.description
+        ?.toLowerCase()
+        .includes(search)
     );
   });
 
-  const displayName = name || username || "Customer";
+  const openRequestModal = (product) => {
+    setSelectedProduct(product);
+    setQuantity(1);
+    setOrderError("");
+    setOrderSuccess(false);
+  };
+
+  const closeRequestModal = () => {
+    if (ordering) {
+      return;
+    }
+
+    setSelectedProduct(null);
+    setQuantity(1);
+    setOrderError("");
+    setOrderSuccess(false);
+  };
+
+  const decreaseQuantity = () => {
+    setQuantity((current) =>
+      Math.max(1, current - 1)
+    );
+  };
+
+  const increaseQuantity = () => {
+    if (!selectedProduct) {
+      return;
+    }
+
+    setQuantity((current) =>
+      Math.min(
+        selectedProduct.stockQuantity,
+        current + 1
+      )
+    );
+  };
+
+  const handleCreateOrder = async () => {
+    if (!selectedProduct || !token) {
+      return;
+    }
+
+    try {
+      setOrdering(true);
+      setOrderError("");
+
+      await createOrder(
+        [
+          {
+            productId: selectedProduct.id,
+            quantity,
+          },
+        ],
+        token
+      );
+
+      setProducts((currentProducts) =>
+        currentProducts.map((product) =>
+          product.id === selectedProduct.id
+            ? {
+                ...product,
+                stockQuantity:
+                  product.stockQuantity - quantity,
+              }
+            : product
+        )
+      );
+
+      setOrderSuccess(true);
+    } catch (err) {
+      setOrderError(
+        err.message ||
+          "Failed to submit the product request."
+      );
+    } finally {
+      setOrdering(false);
+    }
+  };
 
   return (
     <div className="customer-page">
-      {/* =========================
-          CUSTOMER HEADER
-      ========================== */}
-
-      <header className="customer-header">
-        <Link to="/home" className="public-brand">
-          <img
-            src="/bosch-emblem.png"
-            alt="Bosch emblem"
-            className="public-brand-emblem"
-          />
-
-          <span>BOSCH</span>
-        </Link>
-
-        <nav className="customer-nav">
-          <Link to="/home">Home</Link>
-
-          <Link
-            to="/products"
-            className="customer-nav-active"
-          >
-            Products
-          </Link>
-
-          <Link to="/orders">My Orders</Link>
-
-          <div className="customer-profile">
-            <div className="customer-avatar">
-              {displayName.charAt(0).toUpperCase()}
-            </div>
-
-            <span>{displayName}</span>
-          </div>
-
-          <button
-            type="button"
-            onClick={logout}
-            className="customer-logout"
-          >
-            Logout
-          </button>
-        </nav>
-      </header>
-
-      {/* =========================
-          MAIN CONTENT
-      ========================== */}
+      <Header />
 
       <main className="customer-content products-page">
-
-        {/* PAGE INTRO */}
+        {/* =================================================
+            PAGE INTRO
+        ================================================= */}
 
         <section className="products-hero">
           <div>
@@ -125,7 +177,9 @@ function Products() {
           </div>
         </section>
 
-        {/* SEARCH */}
+        {/* =================================================
+            SEARCH
+        ================================================= */}
 
         <section className="products-toolbar">
           <div className="product-search">
@@ -142,7 +196,9 @@ function Products() {
           </div>
         </section>
 
-        {/* LOADING */}
+        {/* =================================================
+            LOADING
+        ================================================= */}
 
         {loading && (
           <div className="products-message">
@@ -157,7 +213,9 @@ function Products() {
           </div>
         )}
 
-        {/* ERROR */}
+        {/* =================================================
+            ERROR
+        ================================================= */}
 
         {!loading && error && (
           <div className="products-message products-error">
@@ -167,7 +225,9 @@ function Products() {
           </div>
         )}
 
-        {/* EMPTY */}
+        {/* =================================================
+            EMPTY
+        ================================================= */}
 
         {!loading &&
           !error &&
@@ -189,22 +249,23 @@ function Products() {
             </div>
           )}
 
-        {/* PRODUCTS */}
+        {/* =================================================
+            PRODUCTS
+        ================================================= */}
 
         {!loading &&
           !error &&
           filteredProducts.length > 0 && (
             <section className="products-grid">
               {filteredProducts.map((product) => {
-                const inStock = product.stockQuantity > 0;
+                const inStock =
+                  product.stockQuantity > 0;
 
                 return (
                   <article
                     key={product.id}
                     className="product-card"
                   >
-                    {/* IMAGE */}
-
                     <div className="product-image-container">
                       {product.imageUrl ? (
                         <img
@@ -231,8 +292,6 @@ function Products() {
                           : "Out of Stock"}
                       </span>
                     </div>
-
-                    {/* DETAILS */}
 
                     <div className="product-card-content">
                       <p className="product-sku">
@@ -270,6 +329,9 @@ function Products() {
                         type="button"
                         className="product-order-button"
                         disabled={!inStock}
+                        onClick={() =>
+                          openRequestModal(product)
+                        }
                       >
                         <ShoppingBag size={17} />
 
@@ -284,6 +346,196 @@ function Products() {
             </section>
           )}
       </main>
+
+      {/* ===================================================
+          REQUEST PRODUCT MODAL
+      =================================================== */}
+
+      {selectedProduct && (
+        <div
+          className="request-modal-overlay"
+          onMouseDown={(event) => {
+            if (
+              event.target === event.currentTarget
+            ) {
+              closeRequestModal();
+            }
+          }}
+        >
+          <div className="request-modal">
+            {!orderSuccess ? (
+              <>
+                <div className="request-modal-header">
+                  <div>
+                    <p className="landing-eyebrow">
+                      PRODUCT REQUEST
+                    </p>
+
+                    <h2>
+                      Request this product
+                    </h2>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="request-modal-close"
+                    onClick={closeRequestModal}
+                    disabled={ordering}
+                    aria-label="Close"
+                  >
+                    <X size={19} />
+                  </button>
+                </div>
+
+                <div className="request-product-summary">
+                  <div className="request-product-image">
+                    {selectedProduct.imageUrl ? (
+                      <img
+                        src={`http://localhost:5272${selectedProduct.imageUrl}`}
+                        alt={selectedProduct.name}
+                      />
+                    ) : (
+                      <Package size={30} />
+                    )}
+                  </div>
+
+                  <div>
+                    <p>
+                      {selectedProduct.sku}
+                    </p>
+
+                    <h3>
+                      {selectedProduct.name}
+                    </h3>
+
+                    <strong>
+                      ₹
+                      {Number(
+                        selectedProduct.price
+                      ).toLocaleString("en-IN")}
+                    </strong>
+                  </div>
+                </div>
+
+                <div className="request-quantity-section">
+                  <div>
+                    <span>Quantity</span>
+
+                    <small>
+                      {selectedProduct.stockQuantity} available
+                    </small>
+                  </div>
+
+                  <div className="quantity-control">
+                    <button
+                      type="button"
+                      onClick={decreaseQuantity}
+                      disabled={
+                        ordering || quantity <= 1
+                      }
+                      aria-label="Decrease quantity"
+                    >
+                      <Minus size={16} />
+                    </button>
+
+                    <span>{quantity}</span>
+
+                    <button
+                      type="button"
+                      onClick={increaseQuantity}
+                      disabled={
+                        ordering ||
+                        quantity >=
+                          selectedProduct.stockQuantity
+                      }
+                      aria-label="Increase quantity"
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
+                </div>
+
+                <div className="request-total">
+                  <span>Total value</span>
+
+                  <strong>
+                    ₹
+                    {Number(
+                      selectedProduct.price * quantity
+                    ).toLocaleString("en-IN")}
+                  </strong>
+                </div>
+
+                {orderError && (
+                  <div className="request-error">
+                    {orderError}
+                  </div>
+                )}
+
+                <div className="request-modal-actions">
+                  <button
+                    type="button"
+                    className="request-cancel-button"
+                    onClick={closeRequestModal}
+                    disabled={ordering}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    type="button"
+                    className="request-confirm-button"
+                    onClick={handleCreateOrder}
+                    disabled={ordering}
+                  >
+                    <ShoppingBag size={17} />
+
+                    {ordering
+                      ? "Submitting..."
+                      : "Submit Request"}
+                  </button>
+                </div>
+              </>
+            ) : (
+              <div className="request-success">
+                <div className="request-success-icon">
+                  <CheckCircle2 size={38} />
+                </div>
+
+                <p className="landing-eyebrow">
+                  REQUEST SUBMITTED
+                </p>
+
+                <h2>
+                  Product request submitted
+                </h2>
+
+                <p>
+                  Your request has been submitted and is
+                  now waiting for manager approval.
+                </p>
+
+                <div className="request-success-actions">
+                  <Link
+                    to="/orders"
+                    className="request-view-orders"
+                  >
+                    View my orders
+                  </Link>
+
+                  <button
+                    type="button"
+                    className="request-continue-button"
+                    onClick={closeRequestModal}
+                  >
+                    Continue browsing
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

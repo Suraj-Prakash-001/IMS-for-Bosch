@@ -23,9 +23,9 @@ public class OrderControllers : ControllerBase
     // =========================================================
 
     [HttpPost]
-    [Authorize(Roles = "Customer,Manager")]
-    public async Task<IActionResult> CreateOrder(
-        CreateOrderRequest request)
+[Authorize(Roles = "Customer,Manager")]
+public async Task<IActionResult> CreateOrder(
+    [FromBody] CreateOrderRequest request)
     {
         var userId =
             User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
