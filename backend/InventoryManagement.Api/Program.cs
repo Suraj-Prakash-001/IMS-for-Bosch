@@ -1,5 +1,8 @@
 using InventoryManagement.Api.Data;
 using InventoryManagement.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,44 @@ builder.Services.AddScoped<AuthService>();
 builder.Services.AddScoped<LocationService>();
 builder.Services.AddScoped<CatalogService>();
 builder.Services.AddScoped<OrderService>();
+builder.Services.AddScoped<AdminSeeder>();
+
+// JWT Authentication
+var jwtKey = builder.Configuration["Jwt:Key"]
+    ?? throw new InvalidOperationException("Jwt:Key is missing.");
+
+var jwtIssuer = builder.Configuration["Jwt:Issuer"]
+    ?? throw new InvalidOperationException("Jwt:Issuer is missing.");
+
+var jwtAudience = builder.Configuration["Jwt:Audience"]
+    ?? throw new InvalidOperationException("Jwt:Audience is missing.");
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+
+            ValidIssuer = jwtIssuer,
+            ValidAudience = jwtAudience,
+
+            IssuerSigningKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(jwtKey)),
+
+            RoleClaimType =
+                "http://schemas.microsoft.com/ws/2008/06/identity/claims/role",
+
+            NameClaimType =
+                "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name"
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 // Controllers
 builder.Services.AddControllers();
@@ -31,6 +72,15 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
+// Seed Admin
+using (var scope = app.Services.CreateScope())
+{
+    var adminSeeder =
+        scope.ServiceProvider.GetRequiredService<AdminSeeder>();
+
+    await adminSeeder.SeedAsync();
+}
+
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -38,6 +88,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllers();
 
