@@ -7,6 +7,8 @@ import {
 import Products from "./pages/Products";
 import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ScrollToTop from "./components/ScrollToTop";
+import Orders from "./pages/Orders"
 
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
@@ -43,6 +45,7 @@ function SimpleAdminPage({ title, description }) {
 function App() {
   return (
     <BrowserRouter>
+    <ScrollToTop />
       <Routes>
 
         {/* =========================
@@ -79,16 +82,13 @@ function App() {
 />
 
         <Route
-          path="/orders"
-          element={
-            <ProtectedRoute role="Customer">
-              <div className="simple-page">
-                <h1>My Orders</h1>
-                <p>Your orders will appear here.</p>
-              </div>
-            </ProtectedRoute>
-          }
-        />
+  path="/orders"
+  element={
+    <ProtectedRoute role="Customer">
+      <Orders />
+    </ProtectedRoute>
+  }
+/>
 
 
         {/* =========================

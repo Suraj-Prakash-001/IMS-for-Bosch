@@ -1,78 +1,68 @@
-import {
-  Bell,
-  ChevronDown,
-  Menu,
-} from "lucide-react";
-
+import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-function Header({ onMenuClick }) {
+function Header() {
   const { name, username, logout } = useAuth();
+  const location = useLocation();
 
-  const displayName = name || username || "Administrator";
+  const displayName = name || username || "Customer";
+
+  const isActive = (path) => {
+    return location.pathname === path
+      ? "customer-nav-active"
+      : "";
+  };
 
   return (
-    <header className="header">
-      <div className="header-left">
-        <button
-          type="button"
-          className="mobile-menu-button"
-          onClick={onMenuClick}
-          aria-label="Toggle navigation"
+    <header className="customer-header">
+      <Link to="/home" className="public-brand">
+        <img
+          src="/bosch-emblem.png"
+          alt="Bosch emblem"
+          className="public-brand-emblem"
+        />
+
+        <span>BOSCH</span>
+      </Link>
+
+      <nav className="customer-nav">
+        <Link
+          to="/home"
+          className={isActive("/home")}
         >
-          <Menu size={20} strokeWidth={1.8} />
-        </button>
+          Home
+        </Link>
 
-        <div>
-          <div className="breadcrumb">
-            Admin Workspace / Dashboard
-          </div>
-
-          <h1>Inventory Overview</h1>
-        </div>
-      </div>
-
-      <div className="header-actions">
-        <button
-          type="button"
-          className="notification-button"
-          aria-label="Notifications"
+        <Link
+          to="/products"
+          className={isActive("/products")}
         >
-          <Bell size={19} strokeWidth={1.8} />
-          <span className="notification-dot"></span>
-        </button>
+          Products
+        </Link>
 
-        <div className="header-user">
-          <div className="user-avatar">
+        <Link
+          to="/orders"
+          className={isActive("/orders")}
+        >
+          My Orders
+        </Link>
+
+        <div className="customer-profile">
+          <div className="customer-avatar">
             {displayName.charAt(0).toUpperCase()}
           </div>
 
-          <div className="header-user-info">
-            <div className="user-name">
-              {displayName}
-            </div>
-
-            <div className="user-role">
-              System Admin
-            </div>
-          </div>
-
-  
-
-          <ChevronDown
-            className="profile-chevron"
-            size={15}
-            strokeWidth={1.8}
-          />
+          <span>{displayName}</span>
         </div>
+
         <button
-  type="button"
-  onClick={logout}
-  className="customer-logout"
->
-  Logout
-</button>
-      </div>
+          type="button"
+          onClick={logout}
+          className="customer-logout"
+        >
+          Logout
+        </button>
+      </nav>
     </header>
   );
 }
