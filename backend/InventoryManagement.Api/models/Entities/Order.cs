@@ -16,12 +16,18 @@ public class Order
 
     public string CustomerName { get; set; } = string.Empty;
 
+    // Department responsible for approving this order
+    public string DepartmentId { get; set; } = string.Empty;
+
     public List<OrderItem> Items { get; set; } = new();
 
     public decimal TotalAmount { get; set; }
 
     [BsonRepresentation(BsonType.String)]
     public OrderStatus Status { get; set; } = OrderStatus.Submitted;
+
+    // Filled only when a manager rejects the order
+    public string? RejectionComment { get; set; }
 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 

@@ -9,3 +9,6 @@ public record CreateOrderItemRequest(
 
 public record UpdateOrderStatusRequest(
     string Status);
+
+public record RejectOrderRequest(
+    string Comment);

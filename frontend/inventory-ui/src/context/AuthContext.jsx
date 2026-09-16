@@ -1,4 +1,9 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import {
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 const AuthContext = createContext(null);
 
@@ -29,9 +34,17 @@ export function AuthProvider({ children }) {
       username: authResponse.username,
       name: authResponse.name,
       role: authResponse.role,
+
+      // Manager / department information
+      departmentId:
+        authResponse.departmentId || null,
     };
 
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(authData));
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(authData)
+    );
+
     setAuth(authData);
   };
 
@@ -43,11 +56,20 @@ export function AuthProvider({ children }) {
   const value = useMemo(
     () => ({
       ...auth,
+
       isAuthenticated: Boolean(auth?.token),
-      isAdmin: auth?.role === "Admin",
-      isCustomer: auth?.role === "Customer",
-      login,
+
+      isAdmin:
+        auth?.role === "Admin",
+
+      isManager:
+        auth?.role === "Manager",
+
+      isCustomer:
+        auth?.role === "Customer",
+
       logout,
+      login,
     }),
     [auth]
   );
@@ -63,7 +85,9 @@ export function useAuth() {
   const context = useContext(AuthContext);
 
   if (!context) {
-    throw new Error("useAuth must be used inside AuthProvider");
+    throw new Error(
+      "useAuth must be used inside AuthProvider"
+    );
   }
 
   return context;

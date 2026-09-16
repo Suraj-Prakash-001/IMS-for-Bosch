@@ -1,7 +1,20 @@
 import { Link } from "react-router-dom";
-import { ArrowRight, Package, ShoppingCart, Search } from "lucide-react";
+import {
+  ArrowRight,
+  Package,
+  ShoppingCart,
+  Search,
+} from "lucide-react";
+
+import { useAuth } from "../context/AuthContext";
 
 function Landing() {
+  const {
+    isAuthenticated,
+    isAdmin,
+    logout,
+  } = useAuth();
+
   return (
     <div className="public-page">
       <header className="public-header">
@@ -19,13 +32,40 @@ function Landing() {
           <a href="#how-it-works">How it works</a>
           <a href="#features">Features</a>
 
-          <Link to="/login" className="public-login-link">
-            Login
-          </Link>
+          {!isAuthenticated ? (
+            <>
+              <Link
+                to="/login"
+                className="public-login-link"
+              >
+                Login
+              </Link>
 
-          <Link to="/register" className="public-register-button">
-            Register
-          </Link>
+              <Link
+                to="/register"
+                className="public-register-button"
+              >
+                Register
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link
+                to={isAdmin ? "/admin" : "/home"}
+                className="public-login-link"
+              >
+                Dashboard
+              </Link>
+
+              <button
+                type="button"
+                onClick={logout}
+                className="public-register-button"
+              >
+                Logout
+              </button>
+            </>
+          )}
         </nav>
       </header>
 
@@ -49,14 +89,32 @@ function Landing() {
             </p>
 
             <div className="landing-actions">
-              <Link to="/login" className="primary-button">
-                Get started
-                <ArrowRight size={17} />
-              </Link>
+              {isAuthenticated ? (
+                <Link
+                  to={isAdmin ? "/admin" : "/home"}
+                  className="primary-button"
+                >
+                  Open dashboard
+                  <ArrowRight size={17} />
+                </Link>
+              ) : (
+                <>
+                  <Link
+                    to="/login"
+                    className="primary-button"
+                  >
+                    Get started
+                    <ArrowRight size={17} />
+                  </Link>
 
-              <Link to="/register" className="secondary-button">
-                Create account
-              </Link>
+                  <Link
+                    to="/register"
+                    className="secondary-button"
+                  >
+                    Create account
+                  </Link>
+                </>
+              )}
             </div>
           </div>
 
@@ -81,8 +139,14 @@ function Landing() {
           </div>
         </section>
 
-        <section id="how-it-works" className="landing-section">
-          <p className="landing-eyebrow">HOW IT WORKS</p>
+        <section
+          id="how-it-works"
+          className="landing-section"
+        >
+          <p className="landing-eyebrow">
+            HOW IT WORKS
+          </p>
+
           <h2>Simple from start to finish.</h2>
 
           <div className="landing-steps">
@@ -90,27 +154,39 @@ function Landing() {
               <Search />
               <span>01</span>
               <h3>Browse</h3>
-              <p>Find products and check their availability.</p>
+              <p>
+                Find products and check their availability.
+              </p>
             </div>
 
             <div>
               <ShoppingCart />
               <span>02</span>
               <h3>Order</h3>
-              <p>Select what you need and submit your order.</p>
+              <p>
+                Select what you need and submit your order.
+              </p>
             </div>
 
             <div>
               <Package />
               <span>03</span>
               <h3>Track</h3>
-              <p>Follow the status of your orders from your account.</p>
+              <p>
+                Follow the status of your orders from your account.
+              </p>
             </div>
           </div>
         </section>
 
-        <section id="features" className="landing-section landing-section-muted">
-          <p className="landing-eyebrow">BUILT FOR USERS</p>
+        <section
+          id="features"
+          className="landing-section landing-section-muted"
+        >
+          <p className="landing-eyebrow">
+            BUILT FOR USERS
+          </p>
+
           <h2>A better inventory experience.</h2>
 
           <p className="landing-section-description">
