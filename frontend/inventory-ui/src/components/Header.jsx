@@ -4,7 +4,13 @@ import {
   Menu,
 } from "lucide-react";
 
+import { useAuth } from "../context/AuthContext";
+
 function Header({ onMenuClick }) {
+  const { name, username, logout } = useAuth();
+
+  const displayName = name || username || "Administrator";
+
   return (
     <header className="header">
       <div className="header-left">
@@ -19,7 +25,7 @@ function Header({ onMenuClick }) {
 
         <div>
           <div className="breadcrumb">
-            Workspace / Dashboard
+            Admin Workspace / Dashboard
           </div>
 
           <h1>Inventory Overview</h1>
@@ -32,22 +38,18 @@ function Header({ onMenuClick }) {
           className="notification-button"
           aria-label="Notifications"
         >
-          <Bell
-            size={19}
-            strokeWidth={1.8}
-          />
-
+          <Bell size={19} strokeWidth={1.8} />
           <span className="notification-dot"></span>
         </button>
 
         <div className="header-user">
           <div className="user-avatar">
-            A
+            {displayName.charAt(0).toUpperCase()}
           </div>
 
           <div className="header-user-info">
             <div className="user-name">
-              Administrator
+              {displayName}
             </div>
 
             <div className="user-role">
@@ -55,12 +57,21 @@ function Header({ onMenuClick }) {
             </div>
           </div>
 
+  
+
           <ChevronDown
             className="profile-chevron"
             size={15}
             strokeWidth={1.8}
           />
         </div>
+        <button
+  type="button"
+  onClick={logout}
+  className="customer-logout"
+>
+  Logout
+</button>
       </div>
     </header>
   );
