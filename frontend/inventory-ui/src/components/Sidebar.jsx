@@ -5,6 +5,8 @@ import {
   Layers3,
   Package,
   ArrowLeftRight,
+  ClipboardList,
+  PlusCircle,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -33,12 +35,14 @@ function Sidebar({ collapsed, onToggle }) {
 
       {/* NAVIGATION */}
       <nav className="sidebar-nav">
+
         {!collapsed && (
           <div className="nav-section-title">
             WORKSPACE
           </div>
         )}
 
+        {/* DASHBOARD */}
         <NavLink
           to="/dashboard"
           className={({ isActive }) =>
@@ -47,9 +51,13 @@ function Sidebar({ collapsed, onToggle }) {
           title="Dashboard"
         >
           <LayoutDashboard className="nav-icon" />
-          {!collapsed && <span>Dashboard</span>}
+
+          {!collapsed && (
+            <span>Dashboard</span>
+          )}
         </NavLink>
 
+        {/* CAMPUSES */}
         <NavLink
           to="/campuses"
           className={({ isActive }) =>
@@ -58,7 +66,10 @@ function Sidebar({ collapsed, onToggle }) {
           title="Campuses"
         >
           <MapPinned className="nav-icon" />
-          {!collapsed && <span>Campuses</span>}
+
+          {!collapsed && (
+            <span>Campuses</span>
+          )}
         </NavLink>
 
         {!collapsed && (
@@ -67,6 +78,7 @@ function Sidebar({ collapsed, onToggle }) {
           </div>
         )}
 
+        {/* INVENTORY */}
         <NavLink
           to="/inventory"
           className={({ isActive }) =>
@@ -75,9 +87,43 @@ function Sidebar({ collapsed, onToggle }) {
           title="Inventory"
         >
           <Package className="nav-icon" />
-          {!collapsed && <span>Inventory</span>}
+
+          {!collapsed && (
+            <span>Inventory</span>
+          )}
         </NavLink>
 
+        {/* ORDERS */}
+        <NavLink
+          to="/admin/orders"
+          className={({ isActive }) =>
+            `nav-item ${isActive ? "active" : ""}`
+          }
+          title="Orders"
+        >
+          <ClipboardList className="nav-icon" />
+
+          {!collapsed && (
+            <span>Orders</span>
+          )}
+        </NavLink>
+
+        {/* ADD PRODUCT */}
+        <NavLink
+          to="/admin/products/new"
+          className={({ isActive }) =>
+            `nav-item ${isActive ? "active" : ""}`
+          }
+          title="Add Product"
+        >
+          <PlusCircle className="nav-icon" />
+
+          {!collapsed && (
+            <span>Add Product</span>
+          )}
+        </NavLink>
+
+        {/* MOVEMENTS */}
         <NavLink
           to="/movements"
           className={({ isActive }) =>
@@ -86,9 +132,13 @@ function Sidebar({ collapsed, onToggle }) {
           title="Movements"
         >
           <ArrowLeftRight className="nav-icon" />
-          {!collapsed && <span>Movements</span>}
+
+          {!collapsed && (
+            <span>Movements</span>
+          )}
         </NavLink>
 
+        {/* BUILDINGS */}
         <NavLink
           to="/buildings"
           className={({ isActive }) =>
@@ -97,9 +147,13 @@ function Sidebar({ collapsed, onToggle }) {
           title="Buildings"
         >
           <Building2 className="nav-icon" />
-          {!collapsed && <span>Buildings</span>}
+
+          {!collapsed && (
+            <span>Buildings</span>
+          )}
         </NavLink>
 
+        {/* FLOORS */}
         <NavLink
           to="/floors"
           className={({ isActive }) =>
@@ -108,8 +162,12 @@ function Sidebar({ collapsed, onToggle }) {
           title="Floors"
         >
           <Layers3 className="nav-icon" />
-          {!collapsed && <span>Floors</span>}
+
+          {!collapsed && (
+            <span>Floors</span>
+          )}
         </NavLink>
+
       </nav>
 
       {/* SIDEBAR CONTROL */}
@@ -118,9 +176,15 @@ function Sidebar({ collapsed, onToggle }) {
           type="button"
           className="sidebar-toggle"
           onClick={onToggle}
-          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          title={
+            collapsed
+              ? "Expand sidebar"
+              : "Collapse sidebar"
+          }
           aria-label={
-            collapsed ? "Expand sidebar" : "Collapse sidebar"
+            collapsed
+              ? "Expand sidebar"
+              : "Collapse sidebar"
           }
         >
           {collapsed ? (

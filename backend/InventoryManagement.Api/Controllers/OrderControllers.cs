@@ -1,5 +1,6 @@
 using System.Security.Claims;
 using InventoryManagement.Api.DTOs.Orders;
+using InventoryManagement.Api.Models.Enums;
 using InventoryManagement.Api.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -220,4 +221,55 @@ public async Task<IActionResult> CreateOrder(
             });
         }
     }
+
+    // =========================================================
+// ADMIN: VIEW ALL ORDERS
+// =========================================================
+
+[HttpGet("admin")]
+[Authorize(Roles = "Admin")]
+public async Task<IActionResult> GetAllOrders()
+{
+    var orders =
+        await _orderService.GetAllOrdersAsync();
+
+    return Ok(orders);
+}
+
+// =========================================================
+// ADMIN: UPDATE ORDER STATUS
+// =========================================================
+
+[HttpPost("admin/{orderId}/status")]
+[Authorize(Roles = "Admin")]
+public async Task<IActionResult> UpdateOrderStatus(
+    string orderId,
+    [FromBody] UpdateOrderStatusRequest request)
+{
+    try
+    {
+       var order =
+    await _orderService.UpdateStatusAsync(
+        orderId,
+        request.Status);
+
+        if (order == null)
+        {
+            return NotFound(new
+            {
+                message = "Order was not found."
+            });
+        }
+
+        return Ok(order);
+    }
+    catch (ArgumentException ex)
+    {
+        return BadRequest(new
+        {
+            message = ex.Message
+        });
+    }
+}
+
 }

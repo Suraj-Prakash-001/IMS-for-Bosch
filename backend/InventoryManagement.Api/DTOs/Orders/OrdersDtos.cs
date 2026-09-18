@@ -8,9 +8,6 @@ public record CreateOrderItemRequest(
     string ProductId,
     int Quantity);
 
-public record UpdateOrderStatusRequest(
-    string Status);
-
 public record RejectOrderRequest(
     string Comment);
 

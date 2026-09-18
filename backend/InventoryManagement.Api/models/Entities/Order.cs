@@ -24,7 +24,7 @@ public class Order
     public decimal TotalAmount { get; set; }
 
     [BsonRepresentation(BsonType.String)]
-    public OrderStatus Status { get; set; } = OrderStatus.Submitted;
+public OrderStatus Status { get; set; } = OrderStatus.PendingManagerApproval;
 
     // Filled only when a manager rejects the order
     public string? RejectionComment { get; set; }

@@ -9,7 +9,8 @@ import Layout from "./components/Layout";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import Orders from "./pages/Orders"
-
+import AdminOrders from "./pages/AdminOrders";
+import ManagerOrders from "./pages/ManagerOrders";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -90,6 +91,18 @@ function App() {
   }
 />
 
+        {/* =========================
+            MANAGER
+        ========================== */}
+
+        <Route
+          path="/manager"
+          element={
+            <ProtectedRoute role="Manager">
+              <ManagerOrders />
+            </ProtectedRoute>
+          }
+        />
 
         {/* =========================
             ADMIN
@@ -106,15 +119,23 @@ function App() {
         />
 
         {/* Sidebar Dashboard */}
-        <Route
-          path="/dashboard"
-          element={
-            <AdminLayout>
-              <Dashboard />
-            </AdminLayout>
-          }
-        />
+<Route
+  path="/dashboard"
+  element={
+    <AdminLayout>
+      <Dashboard />
+    </AdminLayout>
+  }
+/>
 
+<Route
+  path="/admin/orders"
+  element={
+    <AdminLayout>
+      <AdminOrders />
+    </AdminLayout>
+  }
+/>
 
         {/* =========================
             CAMPUSES

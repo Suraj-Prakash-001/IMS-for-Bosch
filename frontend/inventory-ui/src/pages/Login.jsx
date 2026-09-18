@@ -6,7 +6,7 @@ import { loginUser } from "../services/api";
 
 function Login() {
   const navigate = useNavigate();
-  const { login, isAuthenticated, isAdmin } = useAuth();
+  const { login, isAuthenticated, isAdmin, isManager } = useAuth();
 
   const [form, setForm] = useState({
     username: "",
@@ -17,13 +17,21 @@ function Login() {
   const [loading, setLoading] = useState(false);
 
   if (isAuthenticated) {
-    return (
-      <Navigate
-        to={isAdmin ? "/admin" : "/home"}
-        replace
-      />
-    );
+  let destination = "/home";
+
+  if (isAdmin) {
+    destination = "/admin";
+  } else if (isManager) {
+    destination = "/manager";
   }
+
+  return (
+    <Navigate
+      to={destination}
+      replace
+    />
+  );
+}
 
   const handleChange = (event) => {
     setForm({
@@ -46,11 +54,13 @@ function Login() {
 
       login(response);
 
-      if (response.role === "Admin") {
-        navigate("/admin", { replace: true });
-      } else {
-        navigate("/home", { replace: true });
-      }
+if (response.role === "Admin") {
+  navigate("/admin", { replace: true });
+} else if (response.role === "Manager") {
+  navigate("/manager", { replace: true });
+} else {
+  navigate("/home", { replace: true });
+}
     } catch (err) {
       setError(err.message || "Unable to login.");
     } finally {

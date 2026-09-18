@@ -104,6 +104,27 @@ export function getMyOrders(token) {
   });
 }
 
+export function getAllOrders(token) {
+  return request("/orders/admin", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function updateOrderStatus(orderId, status, token) {
+  return request(`/orders/admin/${orderId}/status`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      status,
+    }),
+  });
+}
+
 // ===============================
 // MANAGER APPROVALS
 // ===============================
