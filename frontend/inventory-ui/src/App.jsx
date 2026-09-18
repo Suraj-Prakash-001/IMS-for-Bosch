@@ -10,16 +10,19 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ScrollToTop from "./components/ScrollToTop";
 import Orders from "./pages/Orders"
 import AdminOrders from "./pages/AdminOrders";
+import AdminAddProduct from "./pages/AdminAddProduct";
 import ManagerOrders from "./pages/ManagerOrders";
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CustomerHome from "./pages/CustomerHome";
 
+import Inventory from "./pages/Inventory";
 import Dashboard from "./pages/Dashboard";
 import Campuses from "./pages/Campuses";
 import Buildings from "./pages/Buildings";
 import Floors from "./pages/Floors";
+import AdminCategories from "./pages/AdminCategories";
 
 function AdminLayout({ children }) {
   return (
@@ -137,6 +140,23 @@ function App() {
   }
 />
 
+<Route
+  path="/admin/categories"
+  element={
+    <AdminLayout>
+      <AdminCategories />
+    </AdminLayout>
+  }
+/>
+<Route
+  path="/admin/products/new"
+  element={
+    <AdminLayout>
+      <AdminAddProduct />
+    </AdminLayout>
+  }
+/>
+
         {/* =========================
             CAMPUSES
         ========================== */}
@@ -207,14 +227,13 @@ function App() {
         ========================== */}
 
         <Route
-          path="/inventory"
-          element={
-            <SimpleAdminPage
-              title="Inventory"
-              description="Inventory management will be available here."
-            />
-          }
-        />
+  path="/inventory"
+  element={
+    <AdminLayout>
+      <Inventory />
+    </AdminLayout>
+  }
+/>
 
         <Route
           path="/movements"

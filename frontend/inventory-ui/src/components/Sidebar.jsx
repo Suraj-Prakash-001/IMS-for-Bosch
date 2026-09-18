@@ -7,6 +7,7 @@ import {
   ArrowLeftRight,
   ClipboardList,
   PlusCircle,
+  Tags,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -122,6 +123,21 @@ function Sidebar({ collapsed, onToggle }) {
             <span>Add Product</span>
           )}
         </NavLink>
+
+        {/* CATEGORIES */}
+<NavLink
+  to="/admin/categories"
+  className={({ isActive }) =>
+    `nav-item ${isActive ? "active" : ""}`
+  }
+  title="Categories"
+>
+  <Tags className="nav-icon" />
+
+  {!collapsed && (
+    <span>Categories</span>
+  )}
+</NavLink>
 
         {/* MOVEMENTS */}
         <NavLink
