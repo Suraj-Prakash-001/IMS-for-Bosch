@@ -213,7 +213,34 @@ a {
   display: flex;
   flex-direction: column;
   gap: 4px;
+
+  flex: 1;
+  min-height: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  padding-right: 2px;
 }
+
+/* Keep sidebar navigation scrollable without hiding the toggle */
+
+.sidebar-nav::-webkit-scrollbar {
+  width: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb {
+  background: #343b43;
+  border-radius: 4px;
+}
+
+.sidebar-nav::-webkit-scrollbar-thumb:hover {
+  background: #4a535d;
+} 
 
 .nav-section-title {
   margin: 18px 10px 8px;

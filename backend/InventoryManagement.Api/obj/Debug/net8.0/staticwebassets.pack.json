@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\PSK6COB\\Documents\\GitHub\\IMS-for-Bosch\\backend\\InventoryManagement.Api\\wwwroot\\uploads\\products\\535b87ff37344d08a184654bd803a44a.webp",
+      "PackagePath": "staticwebassets\\uploads\\products\\535b87ff37344d08a184654bd803a44a.webp"
+    },
+    {
       "Id": "C:\\Users\\PSK6COB\\Documents\\GitHub\\IMS-for-Bosch\\backend\\InventoryManagement.Api\\wwwroot\\uploads\\products\\ebd4da0db64749038ceba07532e6fb52.jpg",
       "PackagePath": "staticwebassets\\uploads\\products\\ebd4da0db64749038ceba07532e6fb52.jpg"
     },

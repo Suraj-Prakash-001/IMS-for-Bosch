@@ -159,4 +159,16 @@ export function rejectManagerOrder(orderId, comment, token) {
   });
 }
 
+// ===============================
+// ADMIN DASHBOARD
+// ===============================
+
+export function getAdminDashboard(token) {
+  return request("/admin/dashboard", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
 export default request;
