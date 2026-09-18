@@ -64,53 +64,54 @@ public class LocationService
     // BUILDING
     // =====================================================
 
-    public async Task<Building> CreateBuildingAsync(
-        CreateBuildingRequest request)
+public async Task<Building> CreateBuildingAsync(
+    string locationId,
+    CreateBuildingRequest request)
+{
+    ValidateText(locationId, "Location ID");
+    ValidateText(request.Name, "Building name");
+    ValidateText(request.Code, "Building code");
+
+    bool locationExists =
+        await _db.Locations
+            .Find(x => x.Id == locationId)
+            .AnyAsync();
+
+    if (!locationExists)
     {
-        ValidateText(request.LocationId, "Location ID");
-        ValidateText(request.Name, "Building name");
-        ValidateText(request.Code, "Building code");
-
-        bool locationExists =
-            await _db.Locations
-                .Find(x => x.Id == request.LocationId)
-                .AnyAsync();
-
-        if (!locationExists)
-        {
-            throw new ArgumentException(
-                "The specified location does not exist.");
-        }
-
-        string code = request.Code.Trim();
-
-        bool duplicate =
-            await _db.Buildings
-                .Find(x =>
-                    x.LocationId == request.LocationId &&
-                    x.Code == code)
-                .AnyAsync();
-
-        if (duplicate)
-        {
-            throw new InvalidOperationException(
-                $"Building code '{code}' already exists in this location.");
-        }
-
-        var building = new Building
-        {
-            LocationId = request.LocationId,
-            Name = request.Name.Trim(),
-            Code = code,
-            Description =
-                request.Description?.Trim() ?? string.Empty,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _db.Buildings.InsertOneAsync(building);
-
-        return building;
+        throw new ArgumentException(
+            "The specified location does not exist.");
     }
+
+    string code = request.Code.Trim();
+
+    bool duplicate =
+        await _db.Buildings
+            .Find(x =>
+                x.LocationId == locationId &&
+                x.Code == code)
+            .AnyAsync();
+
+    if (duplicate)
+    {
+        throw new InvalidOperationException(
+            $"Building code '{code}' already exists in this location.");
+    }
+
+    var building = new Building
+    {
+        LocationId = locationId,
+        Name = request.Name.Trim(),
+        Code = code,
+        Description =
+            request.Description?.Trim() ?? string.Empty,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    await _db.Buildings.InsertOneAsync(building);
+
+    return building;
+}
 
     public async Task<List<Building>> GetBuildingsAsync(
         string locationId)
@@ -127,55 +128,56 @@ public class LocationService
     // FLOOR
     // =====================================================
 
-    public async Task<Floor> CreateFloorAsync(
-        CreateFloorRequest request)
+public async Task<Floor> CreateFloorAsync(
+    string buildingId,
+    CreateFloorRequest request)
+{
+    ValidateText(buildingId, "Building ID");
+    ValidateText(request.Name, "Floor name");
+    ValidateText(request.Code, "Floor code");
+
+    bool buildingExists =
+        await _db.Buildings
+            .Find(x => x.Id == buildingId)
+            .AnyAsync();
+
+    if (!buildingExists)
     {
-        ValidateText(request.BuildingId, "Building ID");
-        ValidateText(request.Name, "Floor name");
-        ValidateText(request.Code, "Floor code");
-
-        bool buildingExists =
-            await _db.Buildings
-                .Find(x => x.Id == request.BuildingId)
-                .AnyAsync();
-
-        if (!buildingExists)
-        {
-            throw new ArgumentException(
-                "The specified building does not exist.");
-        }
-
-        string code = request.Code.Trim();
-
-        bool duplicate =
-            await _db.Floors
-                .Find(x =>
-                    x.BuildingId == request.BuildingId &&
-                    (
-                        x.Code == code ||
-                        x.FloorNumber == request.FloorNumber
-                    ))
-                .AnyAsync();
-
-        if (duplicate)
-        {
-            throw new InvalidOperationException(
-                "A floor with this code or floor number already exists in the building.");
-        }
-
-        var floor = new Floor
-        {
-            BuildingId = request.BuildingId,
-            Name = request.Name.Trim(),
-            FloorNumber = request.FloorNumber,
-            Code = code,
-            CreatedAt = DateTime.UtcNow
-        };
-
-        await _db.Floors.InsertOneAsync(floor);
-
-        return floor;
+        throw new ArgumentException(
+            "The specified building does not exist.");
     }
+
+    string code = request.Code.Trim();
+
+    bool duplicate =
+        await _db.Floors
+            .Find(x =>
+                x.BuildingId == buildingId &&
+                (
+                    x.Code == code ||
+                    x.FloorNumber == request.FloorNumber
+                ))
+            .AnyAsync();
+
+    if (duplicate)
+    {
+        throw new InvalidOperationException(
+            "A floor with this code or floor number already exists in the building.");
+    }
+
+    var floor = new Floor
+    {
+        BuildingId = buildingId,
+        Name = request.Name.Trim(),
+        FloorNumber = request.FloorNumber,
+        Code = code,
+        CreatedAt = DateTime.UtcNow
+    };
+
+    await _db.Floors.InsertOneAsync(floor);
+
+    return floor;
+}
 
     public async Task<List<Floor>> GetFloorsAsync(
         string buildingId)

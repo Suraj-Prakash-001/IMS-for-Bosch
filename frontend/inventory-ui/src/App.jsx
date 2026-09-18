@@ -17,6 +17,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import CustomerHome from "./pages/CustomerHome";
 
+import Sections from "./pages/Sections";
 import Inventory from "./pages/Inventory";
 import Dashboard from "./pages/Dashboard";
 import Campuses from "./pages/Campuses";
@@ -220,6 +221,15 @@ function App() {
             </AdminLayout>
           }
         />
+
+        <Route
+  path="/floors/:floorId"
+  element={
+    <AdminLayout>
+      <Sections />
+    </AdminLayout>
+  }
+/>
 
 
         {/* =========================

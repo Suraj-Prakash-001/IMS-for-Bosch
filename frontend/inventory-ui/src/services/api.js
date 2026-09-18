@@ -171,4 +171,106 @@ export function getAdminDashboard(token) {
     },
   });
 }
+
+// ===============================
+// LOCATIONS / CAMPUSES
+// ===============================
+
+export function getLocations(token) {
+  return request("/locations", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+export function createLocation(location, token) {
+  return request("/locations", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(location),
+  });
+}
+
+// ===============================
+// BUILDINGS
+// ===============================
+
+export function getBuildings(locationId, token) {
+  return request(
+    `/locations/${locationId}/buildings`,
+    {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+}
+
+export function createBuilding(
+  locationId,
+  building,
+  token
+) {
+  return request(
+    `/locations/${locationId}/buildings`,
+    {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(building),
+    }
+  );
+}
+
+// ===============================
+// BUILDING / FLOOR MANAGEMENT
+// ===============================
+
+export function getFloors(buildingId, token) {
+  return request(`/locations/buildings/${buildingId}/floors`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function createFloor(buildingId, floor, token) {
+  return request(`/locations/buildings/${buildingId}/floors`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(floor),
+  });
+}
+
+// ===============================
+// SECTION MANAGEMENT
+// ===============================
+
+export function getSections(floorId, token) {
+  return request(`/locations/floors/${floorId}/sections`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+export function createSection(floorId, section, token) {
+  return request(`/locations/floors/${floorId}/sections`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(section),
+  });
+}
+
 export default request;

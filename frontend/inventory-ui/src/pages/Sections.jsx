@@ -1,19 +1,17 @@
 import { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import {
-  createBuilding,
-  getBuildings,
-  getLocations,
+  createSection,
+  getSections,
 } from "../services/api";
 import { useAuth } from "../context/AuthContext";
 
-function Buildings() {
-  const { campusId } = useParams();
+function Sections() {
+  const { floorId } = useParams();
+  const location = useLocation();
   const { token } = useAuth();
 
-  const [campus, setCampus] = useState(null);
-  const [buildings, setBuildings] = useState([]);
-
+  const [sections, setSections] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -28,35 +26,17 @@ function Buildings() {
     description: "",
   });
 
-  // =====================================================
-  // LOAD CAMPUS + BUILDINGS
-  // =====================================================
-
-  async function loadData() {
+  async function loadSections() {
     try {
       setLoading(true);
       setError("");
 
-      const [locations, buildingData] =
-        await Promise.all([
-          getLocations(token),
-          getBuildings(campusId, token),
-        ]);
+      const data = await getSections(floorId, token);
 
-      const currentCampus = locations.find(
-        (location) => location.id === campusId
-      );
-
-      if (!currentCampus) {
-        throw new Error("Campus not found.");
-      }
-
-      setCampus(currentCampus);
-      setBuildings(buildingData ?? []);
+      setSections(data ?? []);
     } catch (err) {
       setError(
-        err.message ||
-          "Unable to load campus buildings."
+        err.message || "Unable to load sections."
       );
     } finally {
       setLoading(false);
@@ -64,19 +44,13 @@ function Buildings() {
   }
 
   useEffect(() => {
-    if (token && campusId) {
-      loadData();
+    if (token && floorId) {
+      loadSections();
     } else {
       setLoading(false);
-      setError(
-        "Admin authentication is required."
-      );
+      setError("Admin authentication is required.");
     }
-  }, [token, campusId]);
-
-  // =====================================================
-  // FORM
-  // =====================================================
+  }, [token, floorId]);
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -95,10 +69,6 @@ function Buildings() {
     });
   }
 
-  // =====================================================
-  // CREATE BUILDING
-  // =====================================================
-
   async function handleSubmit(event) {
     event.preventDefault();
 
@@ -107,8 +77,8 @@ function Buildings() {
       setError("");
       setSuccess("");
 
-      await createBuilding(
-        campusId,
+      await createSection(
+        floorId,
         {
           name: form.name.trim(),
           code: form.code.trim(),
@@ -117,27 +87,20 @@ function Buildings() {
         token
       );
 
-      setSuccess(
-        "Building created successfully."
-      );
+      setSuccess("Section created successfully.");
 
       resetForm();
       setShowForm(false);
 
-      await loadData();
+      await loadSections();
     } catch (err) {
       setError(
-        err.message ||
-          "Unable to create building."
+        err.message || "Unable to create section."
       );
     } finally {
       setSaving(false);
     }
   }
-
-  // =====================================================
-  // LOADING
-  // =====================================================
 
   if (loading) {
     return (
@@ -151,7 +114,7 @@ function Buildings() {
             <h2>Loading...</h2>
 
             <p>
-              Loading campus buildings.
+              Loading floor sections.
             </p>
           </div>
         </div>
@@ -159,39 +122,19 @@ function Buildings() {
     );
   }
 
-  // =====================================================
-  // PAGE
-  // =====================================================
-
-  if (!campus) {
-    return (
-      <div className="page">
-        <div className="location-empty">
-          <h3>Campus not found</h3>
-          <p>{error}</p>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="page">
-
-      {/* =================================================
-          HEADER
-      ================================================= */}
-
       <div className="page-heading">
         <div>
           <p className="eyebrow">
-            {campus.code}
+            {location.state?.floorName || "FLOOR"}
           </p>
 
-          <h2>{campus.name}</h2>
+          <h2>Sections</h2>
 
           <p>
-            Manage buildings within this campus
-            and explore their floors.
+            Manage sections within this floor and
+            explore their seats.
           </p>
         </div>
 
@@ -204,15 +147,9 @@ function Buildings() {
             setSuccess("");
           }}
         >
-          {showForm
-            ? "Cancel"
-            : "+ Add Building"}
+          {showForm ? "Cancel" : "+ Add Section"}
         </button>
       </div>
-
-      {/* =================================================
-          MESSAGES
-      ================================================= */}
 
       {error && (
         <div className="location-alert error">
@@ -226,82 +163,73 @@ function Buildings() {
         </div>
       )}
 
-      {/* =================================================
-          CREATE BUILDING FORM
-      ================================================= */}
-
       {showForm && (
         <div className="location-form-card">
-
           <div className="location-form-header">
             <div>
               <p className="eyebrow">
-                NEW BUILDING
+                NEW SECTION
               </p>
 
-              <h3>Add Building</h3>
+              <h3>Add Section</h3>
 
               <p>
-                Add a building to {campus.name}.
+                Add a section to this floor.
               </p>
             </div>
           </div>
 
           <form onSubmit={handleSubmit}>
-
             <div className="location-form-grid">
-
               <div className="location-form-field">
-                <label htmlFor="building-name">
-                  Building Name
+                <label htmlFor="section-name">
+                  Section Name
                 </label>
 
                 <input
-                  id="building-name"
+                  id="section-name"
                   name="name"
                   type="text"
                   value={form.name}
                   onChange={handleChange}
-                  placeholder="e.g. Main Office"
+                  placeholder="e.g. Section A"
                   required
                 />
               </div>
 
               <div className="location-form-field">
-                <label htmlFor="building-code">
-                  Building Code
+                <label htmlFor="section-code">
+                  Section Code
                 </label>
 
                 <input
-                  id="building-code"
+                  id="section-code"
                   name="code"
                   type="text"
                   value={form.code}
                   onChange={handleChange}
-                  placeholder="e.g. BLD-A"
+                  placeholder="e.g. SEC-A"
                   required
                 />
               </div>
 
               <div className="location-form-field full-width">
-                <label htmlFor="building-description">
+                <label htmlFor="section-description">
                   Description
                 </label>
 
                 <textarea
-                  id="building-description"
+                  id="section-description"
                   name="description"
                   value={form.description}
                   onChange={handleChange}
-                  placeholder="Optional building description"
+                  placeholder="Optional section description"
                   rows="4"
                 />
               </div>
-
             </div>
 
             <div className="location-form-actions">
-
               <button
                 type="button"
                 className="location-cancel-button"
@@ -322,86 +250,60 @@ function Buildings() {
               >
                 {saving
                   ? "Creating..."
-                  : "Create Building"}
+                  : "Create Section"}
               </button>
-
             </div>
-
           </form>
         </div>
       )}
 
-      {/* =================================================
-          BUILDING LIST
-      ================================================= */}
-
-      {buildings.length === 0 ? (
+      {sections.length === 0 ? (
         <div className="location-empty">
-
           <div className="building-icon">
-            ▥
+            ▦
           </div>
 
-          <h3>
-            No buildings found
-          </h3>
+          <h3>No sections found</h3>
 
           <p>
-            Add the first building to{" "}
-            <strong>{campus.name}</strong>.
+            Add the first section to this floor.
           </p>
-
         </div>
       ) : (
         <div className="location-grid">
-
-          {buildings.map((building) => (
+          {sections.map((section) => (
             <Link
-  key={building.id}
-  to={`/buildings/${building.id}`}
-  state={{
-    campusName: campus.name,
-    campusId: campus.id,
-  }}
-  className="location-card"
->
-
+              key={section.id}
+              to={`/sections/${section.id}`}
+              state={{
+                floorName:
+                  location.state?.floorName,
+              }}
+              className="location-card"
+            >
               <div className="building-icon">
-                ▥
+                ▦
               </div>
 
               <div className="location-card-content">
+                <h3>{section.name}</h3>
 
-                <h3>
-                  {building.name}
-                </h3>
-
-                <p>
-                  {building.code}
-                </p>
+                <p>{section.code}</p>
 
                 <div className="location-card-meta">
-
                   <span>
-                    View floors
+                    View seats
                   </span>
 
-                  <span>
-                    →
-                  </span>
-
+                  <span>→</span>
                 </div>
-
               </div>
-
             </Link>
           ))}
-
         </div>
       )}
-
     </div>
   );
 }
 
-export default Buildings;
+export default Sections;

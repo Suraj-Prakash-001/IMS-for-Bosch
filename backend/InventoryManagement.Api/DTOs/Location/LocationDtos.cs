@@ -7,13 +7,11 @@ public record CreateLocationRequest(
     string? Description);
 
 public record CreateBuildingRequest(
-    string LocationId,
     string Name,
     string Code,
     string? Description);
 
 public record CreateFloorRequest(
-    string BuildingId,
     string Name,
     int FloorNumber,
     string Code);
